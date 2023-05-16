@@ -407,6 +407,24 @@ func (c *Client) GetAddressObject(path string) (*AddressObject, error) {
 	return ao, nil
 }
 
+// DeleteAddressObject offers the capability to delete a vcard on the server
+// It is needed, if a software wants to perform bulk changes on an existing addressbook
+func (c *Client) DeleteAddressObject(path string) error {
+
+	req, err := c.ic.NewRequest(http.MethodDelete, path, nil)
+	if err != nil {
+		return err
+	}
+	req.Header.Set("Content-Type", vcard.MIMEType)
+
+	resp, err := c.ic.Do(req)
+	if err != nil {
+		return err
+	}
+	resp.Body.Close()
+
+	return nil
+}
 func (c *Client) PutAddressObject(path string, card vcard.Card) (*AddressObject, error) {
 	// TODO: add support for If-None-Match and If-Match
 
